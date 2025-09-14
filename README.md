@@ -35,15 +35,40 @@ Framing modes:
 
 ## 📌 Status
 
-This repository currently contains the evolving specification and conformance surface for LLM-IR. A reference implementation (parser, canonicalizer, VM, backends) is planned but not yet present in this repo.
+This monorepo contains both the evolving specification and a Rust reference implementation organized as a cargo workspace. Most crates are compiling stubs that are being wired end-to-end via the CLI for rapid iteration.
 
-If you want to explore the language today, start with the docs:
+Current state:
 
-- `docs/features.md` — high-level feature overview and scope
-- `docs/spec-surface.md` — grammar and semantics surface, node inventory, contracts
-- `docs/conformance-pack.md` — end-to-end conformance scenarios (positive/negative)
+* Parsing, AST, canonical formatting: `llmir-reader`, `llmir-ast`, `llmir-canon` (stubs, compiling)
+* Schema + typing scaffolding: `llmir-schema`, `llmir-types` (stubs)
+* Lowering + VM: `llmir-lower`, `llmir-vm` (skeletal bytecode + interpreter)
+* Diagnostics + capabilities: `llmir-diag`, `llmir-sys` (shared primitives, null impls)
+* Async profile traits: `llmir-asyncx` (API traits only)
+* CLI + integration tests: `llmirc` (CLI binary), `llm-ir` (workspace-level tests)
 
-Contributions are welcome on the spec, examples, and conformance pack.
+Docs to read first:
+
+* `docs/spec-surface.md` — grammar, node inventory, canonicalization, diagnostics
+* `docs/features.md` — feature overview and scope
+* `docs/conformance-pack.md` — end-to-end conformance scenarios
+* `docs/CHEATSHEET.md` — quick reference for tags and shapes
+
+Contributions are welcome across spec, examples, and conformance.
+
+## 🧰 Workspace Crates
+
+* `llmir-ast` — Core data types for the abstract syntax tree (AST); serde-friendly.
+* `llmir-reader` — Parser from zero-indent s-expressions to `llmir-ast::Node`.
+* `llmir-canon` — Canonical formatter/printer producing deterministic textual form.
+* `llmir-diag` — Shared diagnostics primitives and error codes.
+* `llmir-schema` — Table-driven arity/shape checks for core tags.
+* `llmir-types` — Type system scaffold, including `res<T>` (Rails) signatures.
+* `llmir-lower` — Lowers validated AST into a tiny bytecode for the VM.
+* `llmir-vm` — Minimal reference interpreter for the bytecode.
+* `llmir-sys` — Host capability traits (fs, proc, env, time, json, hash, http, gpu) with null impls.
+* `llmir-asyncx` — Async profile traits (tasks, chans, timers, select).
+* `llmirc` — CLI for `parse | canon | check | run` over `.llmir`/`.pulse` sources.
+* `llm-ir` — Workspace-level integration tests spanning crates.
 
 ---
 
@@ -87,39 +112,70 @@ This shapes LLM-IR to be predictable for tools and learnable for small models.
 
 ## 📦 Project Layout
 
-Current:
+Workspace (selected):
 
 ```
 llm-ir/
-├─ README.md
-└─ docs/
-   ├─ features.md
-   ├─ spec-surface.md
-   └─ conformance-pack.md
-```
-
-Planned (future):
-
-```
-llm-ir/
-├─ canon/      # Canonicalizer tool
-├─ parser/     # Reader for .pulse source
-├─ vm/         # Reference bytecode interpreter
-├─ tests/      # Conformance suite (golden/pos/neg/diff)
-└─ examples/   # Example LLM-IR programs
+├─ crates/
+│  ├─ ast/        # llmir-ast — core AST types
+│  ├─ reader/     # llmir-reader — parser
+│  ├─ canon/      # llmir-canon — canonical formatter
+│  ├─ schema/     # llmir-schema — shape checks
+│  ├─ types/      # llmir-types — type system scaffold
+│  ├─ lower/      # llmir-lower — lowers to bytecode
+│  ├─ vm/         # llmir-vm — reference VM
+│  ├─ sys/        # llmir-sys — host capability traits (Null* default)
+│  ├─ asyncx/     # llmir-asyncx — async profile traits
+│  ├─ diag/       # llmir-diag — diagnostics
+│  ├─ cli/        # llmirc — CLI binary
+│  └─ llm-ir/     # integration test crate (workspace-level tests)
+├─ docs/
+│  ├─ spec-surface.md
+│  ├─ features.md
+│  ├─ CONFORMANCE.md
+│  ├─ conformance-pack.md
+│  └─ CHEATSHEET.md
+├─ examples/
+│  └─ agentic-home-orchestrator/ …
+├─ Cargo.toml
+└─ README.md
 ```
 
 ---
 
 ## 🛠️ Getting Started
 
-Until the reference implementation lands, the "getting started" path is documentation-driven:
+Build the workspace and run tests:
 
-1. Read `docs/spec-surface.md` to understand the lexical/grammar surface, node inventory, and contracts.
-2. Browse `docs/features.md` for the MVP scope and the future dials (what’s intentionally deferred).
-3. Review `docs/conformance-pack.md` to see executable-style scenarios that define the expected behavior.
+```bash
+cargo build
+cargo test -q
+```
 
-When the implementation is available, this section will include build/run/test commands and examples.
+Try the CLI (`llmirc`) end-to-end:
+
+```bash
+# show help
+cargo run -p llmirc -- --help
+
+# parse → AST summary
+cargo run -p llmirc -- parse examples/agentic-home-orchestrator/examples/quickstart.pulse
+
+# canonicalize formatting
+cargo run -p llmirc -- canon examples/agentic-home-orchestrator/examples/quickstart.pulse
+
+# shape + type checks
+cargo run -p llmirc -- check examples/agentic-home-orchestrator/examples/quickstart.pulse
+
+# lower → run in VM
+cargo run -p llmirc -- run examples/agentic-home-orchestrator/examples/quickstart.pulse
+```
+
+Reading order for the spec:
+
+1. `docs/spec-surface.md` — lexical/grammar surface, node inventory, canonicalization
+2. `docs/features.md` — MVP scope and deferred features
+3. `docs/conformance-pack.md` — executable-style scenarios and expectations
 
 ---
 
@@ -228,4 +284,5 @@ select
 Notes:
 
 * Orchestrator reads NDJSON lines from `out`, converts each to an SSE `token` frame via `sse.send`, closes on cancel.
+
 ```
