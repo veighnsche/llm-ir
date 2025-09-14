@@ -1,0 +1,15 @@
+[package]
+name = "llm-ir"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+llmir-reader = { path = "../reader" }
+llmir-canon = { path = "../canon" }
+llmir-schema = { path = "../schema" }
+llmir-types = { path = "../types" }
+llmir-lower = { path = "../lower" }
+llmir-vm = { path = "../vm" }
+llmir-sys = { path = "../sys" }
+llmir-diag = { path = "../diag" }
+anyhow = { workspace = true }

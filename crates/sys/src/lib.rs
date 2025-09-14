@@ -25,3 +25,36 @@ impl<'a> Default for Sys<'a> {
         Sys { fs: None, proc_: None, env: None, time: None, json: None, hash: None, http: None, gpu: None }
     }
 }
+
+// Null providers (return E_CAP via trait defaults)
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullFs;
+impl Fs for NullFs {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullProc;
+impl Proc for NullProc {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullEnv;
+impl Env for NullEnv {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullTime;
+impl Time for NullTime {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullJson;
+impl Json for NullJson {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullHash;
+impl Hash for NullHash {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullHttp;
+impl Http for NullHttp {}
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct NullGpu;
+impl Gpu for NullGpu {}
