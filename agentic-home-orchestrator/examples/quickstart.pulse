@@ -5,5 +5,5 @@
 (caps proc http env time json)
 (fn main -> res<i32> ()
 (let prompt "Hello")
-(orchestrator.route_stream prompt "sid-1")
+(route_stream prompt "sid-1")
 ok 0))

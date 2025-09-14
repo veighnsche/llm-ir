@@ -1,0 +1,9 @@
+[package]
+name = "llmir-schema"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+llmir-ast = { path = "../ast" }
+llmir-diag = { path = "../diag" }
+thiserror = { workspace = true }

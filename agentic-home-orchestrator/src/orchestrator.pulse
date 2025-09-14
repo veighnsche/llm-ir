@@ -11,7 +11,7 @@
 (fn route_stream -> res<i32> (prompt sid)
 (pipe (env.get "MODEL_PATH")
 (proc.spawn "llama.cpp" (v "-m" $0 "-p" prompt) (v ("GPU" (env.get "GPU_MASK"))) ".")
-(worker.handle_worker sid _)
+(handle_worker sid _)
 ok 0))
 (com doc human "Parse NDJSON line into json value (fail-closed)")
 (fn parse_line -> res<val> (line)

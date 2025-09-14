@@ -1,0 +1,9 @@
+[package]
+name = "llmir-sys"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+llmir-diag = { path = "../diag" }
+serde = { workspace = true }
+serde_json = { workspace = true }
