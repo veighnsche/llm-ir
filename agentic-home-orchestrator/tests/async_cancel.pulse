@@ -1,0 +1,9 @@
+(mod test_async
+(rails)
+(compact core)
+(async)
+(caps time)
+(fn t -> res<i32> ()
+(select
+(on_tick (timer.after 1) (lam _ ok 1))
+(on_deadline (deadline.ms 0) (lam _ ok 0))))

@@ -1,0 +1,11 @@
+(mod agent
+(rails)
+(compact core)
+(async)
+(caps time log json)
+(com doc human "Bounded agentic loop: plan -> tool -> observe (2 steps)")
+(fn run -> res<i32> (goal)
+(let steps 2)
+(loop steps
+(log.event "plan" goal)
+(ok 0)))

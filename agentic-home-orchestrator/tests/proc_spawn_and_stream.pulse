@@ -1,0 +1,9 @@
+(mod test_proc
+(rails)
+(compact core)
+(async)
+(caps proc)
+(fn t -> res<i32> ()
+(pipe (proc.spawn "/bin/echo" (v "hi") (v) ".")
+(proc.stdout _)
+ok 0))

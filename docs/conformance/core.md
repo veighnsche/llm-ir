@@ -3,6 +3,7 @@
 ## A) Parse & Canonicalization
 
 1. Atoms & spacing (golden round-trip)
+
 ```
 (mod m
 (compact core)
@@ -11,13 +12,16 @@
 
 2. Ordering of decls (canonicalize sorts)
 Input:
+
 ```
 (mod m
 (compact core)
 (fn z -> i32 () 0)
 (const a i32 1))
 ```
+
 Expect canonical:
+
 ```
 (mod m
 (compact core)
@@ -26,19 +30,23 @@ Expect canonical:
 ```
 
 3. KV sort in init
+
 ```
 (new Point (init (kv y 2) (kv x 1)))
 ```
 
 4. Arity check (negative)
+
 ```
 (add 1)
 ```
+
 Expect: E_ARITY on add.
 
 ## B) Modules, use, visibility
 
 5. Import specific symbols
+
 ```
 (mod m
 (compact core)
@@ -47,11 +55,13 @@ Expect: E_ARITY on add.
 ```
 
 6. Illegal import alias (negative)
+
 ```
 (use lib (sym x=y=z))
 ```
 
 7. pub wrapper
+
 ```
 (pub (fn f -> i32 () 0))
 ```
@@ -59,6 +69,7 @@ Expect: E_ARITY on add.
 ## C) Types & name resolution
 
 8. Struct & field access
+
 ```
 (mod m
 (compact core)
@@ -69,6 +80,7 @@ Expect: E_ARITY on add.
 ```
 
 9. Sum + match (exhaustive)
+
 ```
 (mod m
 (compact core)
@@ -83,6 +95,7 @@ Expect: E_ARITY on add.
 Remove the Err arm → E_EXHAUST on match.
 
 11. Alias type
+
 ```
 (type Id (alias i64))
 (const a Id 7)
@@ -91,6 +104,7 @@ Remove the Err arm → E_EXHAUST on match.
 ## D) Functions, lambdas, calls
 
 12. First-class lambdas
+
 ```
 (mod m
 (compact core)
@@ -100,6 +114,7 @@ Remove the Err arm → E_EXHAUST on match.
 ```
 
 13. Unknown symbol (negative)
+
 ```
 (mod m
 (compact core)
@@ -109,6 +124,7 @@ Remove the Err arm → E_EXHAUST on match.
 ## E) Control flow & evaluation order
 
 14. If/else
+
 ```
 (mod m
 (compact core)
@@ -116,6 +132,7 @@ Remove the Err arm → E_EXHAUST on match.
 ```
 
 15. Left-to-right eval (assume io.print returns unit)
+
 ```
 (mod m
 (compact core)
@@ -127,6 +144,7 @@ Remove the Err arm → E_EXHAUST on match.
 ```
 
 16. Short-circuit AND
+
 ```
 (mod m
 (compact core)
@@ -137,6 +155,7 @@ Remove the Err arm → E_EXHAUST on match.
 ## F) Arrays
 
 17. arr.new + idx + set
+
 ```
 (mod m
 (compact core)
@@ -152,20 +171,25 @@ Remove the Err arm → E_EXHAUST on match.
 ## G) Ops & numerics
 
 19. Integer trap on overflow (policy)
+
 ```
 (+ 2147483647 1)
 ```
+
 Expect: E_OVERFLOW under trap policy.
 
 20. Float NaN compare
+
 ```
 (== f:NaN f:NaN)
 ```
+
 Expect usually false.
 
 ## H) Errors: throw/try (non-rails)
 
 21. Caught error
+
 ```
 (mod m
 (compact core)
@@ -182,19 +206,23 @@ Same throw without try → abort E_UNCAUGHT.
 ## I) Const eval
 
 23. Legal const
+
 ```
 (const N i32 (+ 2 3))
 ```
 
 24. Illegal const (IO)
+
 ```
 (const S str (io.print x))
 ```
+
 Expect: E_CONST.
 
 ## J) Patterns
 
 25. Struct pattern
+
 ```
 (type P (struct (f x i32) (f y i32)))
 (fn f -> i32 (p)
@@ -203,28 +231,34 @@ Expect: E_CONST.
 ```
 
 26. Literal pattern mismatch
+
 ```
 (match 2
 (arm (p_lit 1) 0))
 ```
+
 Expect E_EXHAUST.
 
 ## K) Casting
 
 27. as cast success
+
 ```
 (as 1 i64)
 ```
 
 28. Invalid cast (negative)
+
 ```
 (as hi i32)
 ```
+
 Expect E_TYPE.
 
 ## L) Lvalues & assignment
 
 29. set on var
+
 ```
 (mod m
 (compact core)
@@ -235,9 +269,11 @@ Expect E_TYPE.
 ```
 
 30. Illegal lvalue (negative)
+
 ```
 (set (+ 1 2) 3)
 ```
+
 Expect E_LVALUE or E_TYPE.
 
 ## M) Visibility & privacy
@@ -247,6 +283,7 @@ Expect E_LVALUE or E_TYPE.
 ## N) Diagnostics format
 
 32. Span + node path
+
 ```
 code=E_PARSE
 span=[byteStart,byteEnd)

@@ -1,0 +1,15 @@
+{
+  "model_path": "/models/llama-3.1.gguf",
+  "gpu_mask": "0",
+  "host": "127.0.0.1",
+  "port": 8080,
+  "sse_route": "/sse",
+  "workers": 1,
+  "budgets": {
+    "tokens": 256,
+    "time_ms": 30000
+  },
+  "session_lru": {
+    "max": 64
+  }
+}

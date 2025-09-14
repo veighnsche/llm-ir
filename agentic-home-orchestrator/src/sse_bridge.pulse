@@ -1,0 +1,12 @@
+(mod sse_bridge
+(rails)
+(compact core)
+(async)
+(caps http)
+(com doc human "SSE bridge for front-end streaming")
+(fn open_stream -> res<sse> (route)
+(sse.open route))
+(fn send_token -> res<i32> (s tok)
+(sse.send s tok))
+(fn close_stream -> res<i32> (s)
+(sse.close s) ok 0)

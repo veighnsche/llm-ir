@@ -1,0 +1,11 @@
+(mod worker
+(rails)
+(compact core)
+(async)
+(caps proc time log)
+(com doc human "Spawn llama.cpp worker and stream lines")
+(fn handle_worker -> res<i32> (sid p)
+(select
+(on_recv (proc.stdout p) (lam line (log.event "tok" sid line) ok 0))
+(on_recv (proc.stderr p) (lam line (log.event "llm" sid line) ok 0))
+(on_deadline (deadline.ms 300000) (lam _ (proc.kill p "SIGKILL") (hard "deadline")))))

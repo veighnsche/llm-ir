@@ -1,6 +1,7 @@
 # Rails (gated)
 
 40. Enable rails and basic bind/map
+
 ```
 (mod m
 (rails)
@@ -11,6 +12,7 @@
 ```
 
 41. Propagation (bind) from error
+
 ```
 (mod m
 (rails)
@@ -20,6 +22,7 @@
 ```
 
 42. orfast/orsoft healing
+
 ```
 (mod m
 (rails)
@@ -31,6 +34,7 @@
 ```
 
 43. join severity selection
+
 ```
 (mod m
 (rails)
@@ -40,6 +44,7 @@
 ```
 
 44. fold total handler
+
 ```
 (mod m
 (rails)
@@ -53,6 +58,7 @@
 ```
 
 45. Rails disables throw/try/catch (negative)
+
 ```
 (mod m
 (rails)
@@ -64,6 +70,7 @@
 ```
 
 46. Rails nodes illegal without rails (negative)
+
 ```
 (mod m
 (compact core)
